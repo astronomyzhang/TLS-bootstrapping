@@ -1,0 +1,21 @@
+# 设置集群参数
+kubectl config --kubeconfig=./bootstrap-kubeconfig \
+  set-cluster cka \
+  --server=https://my.server.example.com:6443 \
+  --embed-certs=true \
+  --certificate-authority=/etc/kubernetes/pki/ca.crt
+# 设置客户端认证参数
+kubectl config --kubeconfig=./bootstrap-kubeconfig \
+  set-credentials system:bootstrap:07401b \
+  --token=07401b.f395accd246ae52d
+# 设置上下文参数
+kubectl config --kubeconfig=./bootstrap-kubeconfig \
+  set-context default \
+  --user=system:bootstrap:07401b \
+  --cluster=cka
+# 设置默认上下文
+kubectl config --kubeconfig=./bootstrap-kubeconfig use-context default
+
+systemctl daemon-reload 
+systemctl restart kubelet.service
+systemctl status kubelet.service
